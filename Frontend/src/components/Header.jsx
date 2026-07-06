@@ -1,6 +1,8 @@
 import { FaBars, FaSearch, FaYoutube } from "react-icons/fa";
+import { useVideo } from "../context/VideoContext";
 
 const Header = ({ toggleSidebar }) => {
+    const { search, setSearch } = useVideo();
   return (
     <header className="fixed top-0 left-0 right-0 h-16 flex items-center justify-between px-6 shadow-md z-50">
       <div className="flex items-center gap-4">
@@ -18,6 +20,7 @@ const Header = ({ toggleSidebar }) => {
   <input
     type="text"
     placeholder="Search"
+      onChange={(e) => setSearch(e.target.value)}
     className="flex-1 h-10 px-4 border border-gray-300 rounded-l-full bg-white text-black placeholder-gray-500 outline-none focus:border-blue-500"
   />
 
