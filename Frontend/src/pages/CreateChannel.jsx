@@ -1,48 +1,98 @@
-import {
-  FaHome,
-  FaFire,
-  FaMusic,
-  FaGamepad,
-  FaHistory,
-} from "react-icons/fa";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
-const Sidebar = ({ open }) => {
+import { useAuth } from "../context/AuthContext";
+import { createChannel } from "../services/channelApi";
+
+const CreateChannel = () => {
+
+  const navigate = useNavigate();
+
+  const { user } = useAuth();
+
+  const [form, setForm] = useState({
+    channelName: "",
+    description: "",
+    logo: "",
+    banner: "",
+  });
+
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const submit = async (e) => {
+
+    e.preventDefault();
+
+    try {
+
+      await createChannel(form, user.token);
+
+      toast.success("Channel Created");
+
+      navigate("/my-channel");
+
+    } catch (err) {
+
+      toast.error(err.response?.data?.message);
+
+    }
+
+  };
+
   return (
-    <aside
-      className={`fixed top-16 left-0 h-screen bg-zinc-900 transition-all duration-300 ${
-        open ? "w-60" : "w-20"
-      }`}
-    >
-      <div className="flex flex-col gap-6 mt-6 px-4">
+    <div className="min-h-screen pt-24 flex justify-center">
 
-        <div className="flex items-center gap-4">
-          <FaHome />
-          {open && <span>Home</span>}
-        </div>
+      <form
+        onSubmit={submit}
+        className="bg-zinc-900 p-8 rounded-xl w-[600px] space-y-4"
+      >
 
-        <div className="flex items-center gap-4">
-          <FaFire />
-          {open && <span>Trending</span>}
-        </div>
+        <h1 className="text-3xl font-bold">
+          Create Channel
+        </h1>
 
-        <div className="flex items-center gap-4">
-          <FaMusic />
-          {open && <span>Music</span>}
-        </div>
+        <input
+          name="channelName"
+          placeholder="Channel Name"
+          onChange={handleChange}
+          className="w-full p-3 rounded bg-zinc-800"
+        />
 
-        <div className="flex items-center gap-4">
-          <FaGamepad />
-          {open && <span>Gaming</span>}
-        </div>
+        <textarea
+          name="description"
+          placeholder="Description"
+          onChange={handleChange}
+          className="w-full p-3 rounded bg-zinc-800"
+        />
 
-        <div className="flex items-center gap-4">
-          <FaHistory />
-          {open && <span>History</span>}
-        </div>
+        <input
+          name="logo"
+          placeholder="Logo URL"
+          onChange={handleChange}
+          className="w-full p-3 rounded bg-zinc-800"
+        />
 
-      </div>
-    </aside>
+        <input
+          name="banner"
+          placeholder="Banner URL"
+          onChange={handleChange}
+          className="w-full p-3 rounded bg-zinc-800"
+        />
+
+        <button className="bg-red-600 w-full py-3 rounded">
+          Create Channel
+        </button>
+
+      </form>
+
+    </div>
   );
 };
 
-export default Sidebar;
+export default CreateChannel;

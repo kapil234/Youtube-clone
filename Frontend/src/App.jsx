@@ -9,6 +9,10 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import UploadVideo from "./pages/UploadVideo";
+import VideoPlayer from "./pages/VideoPlayer/VideoPlayer";
+import CreateChannel from "./pages/CreateChannel/CreateChannel";
+import MyChannel from "./pages/MyChannel/MyChannel";
+import Channel from "./pages/Channel/Channel";
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -48,7 +52,34 @@ function App() {
               <UploadVideo />
             </ProtectedRoute>
           }
+          
         />
+        <Route
+path="/video/:id"
+element={<VideoPlayer/>}
+/>
+<Route
+  path="/create-channel"
+  element={
+    <ProtectedRoute>
+      <CreateChannel />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/my-channel"
+  element={
+    <ProtectedRoute>
+      <MyChannel />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/channel/:id"
+  element={<Channel />}
+/>
       </Routes>
     </>
   );
