@@ -1,91 +1,102 @@
 import { useState } from "react";
-import { registerUser } from "../../services/authApi";
+import { registerUser } from "../services/authApi";
 import { useNavigate, Link } from "react-router-dom";
+import { FaYoutube } from "react-icons/fa";
 import toast from "react-hot-toast";
 
 const Register = () => {
+  const navigate = useNavigate();
 
-const navigate = useNavigate();
+  const [form, setForm] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
 
-const [form,setForm]=useState({
+  const submit = async (e) => {
+    e.preventDefault();
 
-username:"",
-email:"",
-password:""
+    try {
+      await registerUser(form);
 
-});
+      toast.success("Registration Successful");
+      navigate("/login");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Registration Failed");
+    }
+  };
 
-const submit=async(e)=>{
+  return (
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
+      <form
+        onSubmit={submit}
+        className="w-full max-w-md bg-white shadow-lg rounded-2xl p-8"
+      >
+        {/* Logo */}
+        <div className="flex flex-col items-center mb-8">
+          <FaYoutube className="text-red-600 text-6xl" />
+          <h1 className="text-3xl font-bold mt-3 text-gray-900">
+            Create Account
+          </h1>
+          <p className="text-gray-500 mt-1">
+            Sign up to YouTube Clone
+          </p>
+        </div>
 
-e.preventDefault();
+        {/* Username */}
+        <input
+          type="text"
+          placeholder="Username"
+          value={form.username}
+          onChange={(e) =>
+            setForm({ ...form, username: e.target.value })
+          }
+          className="w-full border border-gray-300 rounded-lg p-3 mb-4 outline-none focus:border-blue-500"
+        />
 
-try{
+        {/* Email */}
+        <input
+          type="email"
+          placeholder="Email"
+          value={form.email}
+          onChange={(e) =>
+            setForm({ ...form, email: e.target.value })
+          }
+          className="w-full border border-gray-300 rounded-lg p-3 mb-4 outline-none focus:border-blue-500"
+        />
 
-await registerUser(form);
+        {/* Password */}
+        <input
+          type="password"
+          placeholder="Password"
+          value={form.password}
+          onChange={(e) =>
+            setForm({ ...form, password: e.target.value })
+          }
+          className="w-full border border-gray-300 rounded-lg p-3 mb-6 outline-none focus:border-blue-500"
+        />
 
-toast.success("Registration Successful");
+        {/* Register Button */}
+        <button
+          type="submit"
+          className="w-full bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition"
+        >
+          Register
+        </button>
 
-navigate("/login");
-
-}catch(err){
-
-toast.error(err.response?.data?.message || "Registration Failed");
-
-}
-
-}
-
-return(
-
-<div className="min-h-screen flex justify-center items-center">
-
-<form
-onSubmit={submit}
-className="bg-zinc-900 p-8 rounded-xl w-96 space-y-4">
-
-<h1 className="text-3xl font-bold">
-
-Register
-
-</h1>
-
-<input
-placeholder="Username"
-className="w-full p-3 rounded bg-zinc-800"
-onChange={(e)=>setForm({...form,username:e.target.value})}
-/>
-
-<input
-placeholder="Email"
-className="w-full p-3 rounded bg-zinc-800"
-onChange={(e)=>setForm({...form,email:e.target.value})}
-/>
-
-<input
-type="password"
-placeholder="Password"
-className="w-full p-3 rounded bg-zinc-800"
-onChange={(e)=>setForm({...form,password:e.target.value})}
-/>
-
-<button className="bg-red-600 w-full p-3 rounded">
-
-Register
-
-</button>
-
-<Link to="/login" className="text-blue-400">
-
-Already have an account?
-
-</Link>
-
-</form>
-
-</div>
-
-)
-
-}
+        {/* Login Link */}
+        <p className="text-center mt-6 text-gray-600">
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            className="text-blue-600 hover:underline font-medium"
+          >
+            Sign In
+          </Link>
+        </p>
+      </form>
+    </div>
+  );
+};
 
 export default Register;
