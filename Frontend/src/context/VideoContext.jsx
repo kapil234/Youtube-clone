@@ -1,32 +1,50 @@
-import { createContext, useContext, useState } from "react";
-import { videos } from "../data/data";
+import { createContext, useContext, useEffect, useState } from "react";
+import { getVideos } from "../services/videoApi";
 
 const VideoContext = createContext();
 
 export const VideoProvider = ({ children }) => {
-  const [allVideos] = useState(videos);
+
+  const [videos, setVideos] = useState([]);
+
   const [search, setSearch] = useState("");
+
   const [category, setCategory] = useState("All");
 
-  const filteredVideos = allVideos.filter((video) => {
-    const matchSearch = video.title
+  useEffect(() => {
+    loadVideos();
+  }, []);
+
+  const loadVideos = async () => {
+    try {
+      const res = await getVideos();
+      setVideos(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const filteredVideos = videos.filter((video) => {
+    const searchMatch = video.title
       .toLowerCase()
       .includes(search.toLowerCase());
 
-    const matchCategory =
-      category === "All" || video.category === category;
+    const categoryMatch =
+      category === "All" ||
+      video.category === category;
 
-    return matchSearch && matchCategory;
+    return searchMatch && categoryMatch;
   });
 
   return (
     <VideoContext.Provider
       value={{
+        filteredVideos,
         search,
         setSearch,
         category,
         setCategory,
-        filteredVideos,
+        loadVideos,
       }}
     >
       {children}
@@ -34,4 +52,5 @@ export const VideoProvider = ({ children }) => {
   );
 };
 
-export const useVideo = () => useContext(VideoContext);
+export const useVideo = () =>
+  useContext(VideoContext);

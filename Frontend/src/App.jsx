@@ -1,13 +1,14 @@
-import { Routes, Route } from "react-router-dom";
 import { useState } from "react";
+import { Routes, Route } from "react-router-dom";
 
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import ProtectedRoute from "./components/ProtectedRoute";
+import UploadVideo from "./pages/UploadVideo";
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -27,19 +28,24 @@ function App() {
           element={<Home sidebarOpen={sidebarOpen} />}
         />
 
-        {/* Authentication */}
-        <Route path="/login" element={<Login />} />
+        {/* Login */}
+        <Route
+          path="/login"
+          element={<Login />}
+        />
 
-        <Route path="/register" element={<Register />} />
+        {/* Register */}
+        <Route
+          path="/register"
+          element={<Register />}
+        />
 
-        {/* Protected Route Example */}
+        {/* Protected Upload Page */}
         <Route
           path="/upload"
           element={
             <ProtectedRoute>
-              <div className="pt-20 ml-20 text-3xl">
-                Upload Page
-              </div>
+              <UploadVideo />
             </ProtectedRoute>
           }
         />

@@ -41,19 +41,28 @@ const Header = ({ toggleSidebar }) => {
 
       {/* Right */}
       {user ? (
-        <div className="flex items-center gap-4">
-          <span className="font-medium">{user.username}</span>
+       <div className="flex items-center gap-3">
 
-          <button
-            onClick={() => {
-              logout();
-              navigate("/login");
-            }}
-            className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
-          >
-            Logout
-          </button>
-        </div>
+  <button
+    onClick={() => navigate("/upload")}
+    className="bg-zinc-700 px-4 py-2 rounded"
+  >
+    Upload
+  </button>
+
+  <span>{user.username}</span>
+
+  <button
+    onClick={() => {
+      logout();
+      navigate("/login");
+    }}
+    className="bg-red-600 px-4 py-2 rounded"
+  >
+    Logout
+  </button>
+
+</div>
       ) : (
         <button
           onClick={() => navigate("/login")}

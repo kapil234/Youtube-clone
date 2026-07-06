@@ -13,7 +13,7 @@ const VideoCard = ({ video }) => {
         {/* Channel Avatar */}
         <img
           src={video.channelImage}
-          alt={video.channel}
+          alt={<p>{video.owner?.username}</p>}
           className="w-10 h-10 rounded-full"
         />
 
@@ -23,7 +23,7 @@ const VideoCard = ({ video }) => {
           </h3>
 
           <p className="text-sm text-gray-600 mt-1">
-            {video.channel}
+            {<p>{video.owner?.username}</p>}
           </p>
 
           <p className="text-sm text-gray-500">
