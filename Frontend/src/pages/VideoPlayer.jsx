@@ -8,15 +8,15 @@ import {
 } from "react-icons/fa";
 import toast from "react-hot-toast";
 
-import { useAuth } from "../../context/AuthContext";
-import { getVideo } from "../../services/videoApi";
+import { useAuth } from "../context/AuthContext";
+import { getVideo } from "../services/videoApi";
 
 import {
   getComments,
   addComment,
   updateComment,
   deleteComment,
-} from "../../services/commentApi";
+} from "../services/commentApi";
 
 const VideoPlayer = () => {
   const { id } = useParams();

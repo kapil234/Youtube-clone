@@ -9,10 +9,10 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import UploadVideo from "./pages/UploadVideo";
-import VideoPlayer from "./pages/VideoPlayer/VideoPlayer";
-import CreateChannel from "./pages/CreateChannel/CreateChannel";
-import MyChannel from "./pages/MyChannel/MyChannel";
-import Channel from "./pages/Channel/Channel";
+import VideoPlayer from "./pages/VideoPlayer";
+import CreateChannel from "./pages/CreateChannel";
+import MyChannel from "./pages/MyChannel";
+import Channel from "./pages/Channel";
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(true);

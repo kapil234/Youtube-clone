@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { getChannel } from "../../services/channelApi";
+import { getChannel } from "../services/channelApi";
 
 const Channel = () => {
 
