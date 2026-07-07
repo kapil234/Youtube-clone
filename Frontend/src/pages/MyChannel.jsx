@@ -9,6 +9,7 @@ import {
 } from "../services/channelApi";
 import { deleteVideo } from "../services/videoApi";
 import VideoCard from "../components/VideoCard";
+import { useVideo } from "../context/VideoContext";
 
 const tabs = [
   "Home",
@@ -24,7 +25,7 @@ const filters = ["Latest", "Popular", "Oldest"];
 const MyChannel = () => {
  const { user, setHasChannel } = useAuth();
   const navigate = useNavigate();
-
+const { loadVideos } = useVideo();
   const [channel, setChannel] = useState(null);
   const [videos, setVideos] = useState([]);
   const [activeTab, setActiveTab] = useState("Videos");
@@ -78,6 +79,7 @@ const MyChannel = () => {
     alert("Channel deleted successfully");
 
     navigate("/");
+     
   } catch (err) {
     console.log(err);
 
@@ -99,7 +101,7 @@ const MyChannel = () => {
       await deleteVideo(id, user.token);
 
       setVideos((prev) => prev.filter((video) => video._id !== id));
-
+          await loadVideos();
       alert("Video deleted successfully");
     } catch (err) {
       console.log(err);

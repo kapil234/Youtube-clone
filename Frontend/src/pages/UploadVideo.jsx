@@ -45,7 +45,7 @@ const UploadVideo = () => {
       await loadVideos();
 
       // Navigate back to Home
-      navigate("/");
+      navigate("/my-channel");
     } catch (err) {
       toast.error(err.response?.data?.message || "Upload Failed");
     }
