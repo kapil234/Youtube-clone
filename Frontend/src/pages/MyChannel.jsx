@@ -22,7 +22,7 @@ const tabs = [
 const filters = ["Latest", "Popular", "Oldest"];
 
 const MyChannel = () => {
-  const { user } = useAuth();
+ const { user, setHasChannel } = useAuth();
   const navigate = useNavigate();
 
   const [channel, setChannel] = useState(null);
@@ -71,6 +71,9 @@ const MyChannel = () => {
 
   try {
     await deleteChannel(user.token);
+
+    // Update Header immediately
+    setHasChannel(false);
 
     alert("Channel deleted successfully");
 
