@@ -9,7 +9,8 @@ export const createVideo = async (req, res) => {
     // Find logged-in user's channel
     const channel = await Channel.findOne({
       owner: req.user._id,
-     
+      //channel: channel._id,
+    
     });
 
     if (!channel) {
