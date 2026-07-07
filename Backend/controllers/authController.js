@@ -4,36 +4,63 @@ import generateToken from "../config/jwt.js";
 
 export const register = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    let { username, email, password } = req.body;
 
+    // Trim input
+    username = username.trim();
+    email = email.trim().toLowerCase();
+
+    // Email Validation
+    const emailRegex =
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        message: "Please enter a valid email address.",
+      });
+    }
+
+    // Password Validation
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({
+        message:
+          "Password must be at least 8 characters and include uppercase, lowercase, number and special character.",
+      });
+    }
+
+    // Check Existing User
     const userExists = await User.findOne({
       email,
     });
 
-    if (userExists)
-      return res
-        .status(400)
-        .json({
-          message: "User already exists",
-        });
+    if (userExists) {
+      return res.status(400).json({
+        message: "User already exists",
+      });
+    }
 
+    // Hash Password
     const salt = await bcrypt.genSalt(10);
 
     const hashedPassword =
       await bcrypt.hash(password, salt);
 
-    const user = await User.create({
+    // Create User
+    await User.create({
       username,
       email,
       password: hashedPassword,
     });
 
+    // No JWT Here
     res.status(201).json({
-      _id: user._id,
-      username: user.username,
-      email: user.email,
-      token: generateToken(user._id),
+      success: true,
+      message: "Registration successful. Please login.",
     });
+
   } catch (err) {
     res.status(500).json({
       message: err.message,
@@ -43,10 +70,13 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    let { email, password } = req.body;
 
-    const user =
-      await User.findOne({ email });
+    email = email.trim().toLowerCase();
+
+    const user = await User.findOne({
+      email,
+    });
 
     if (
       user &&
@@ -55,7 +85,7 @@ export const login = async (req, res) => {
         user.password
       ))
     ) {
-      res.json({
+      res.status(200).json({
         _id: user._id,
         username: user.username,
         email: user.email,

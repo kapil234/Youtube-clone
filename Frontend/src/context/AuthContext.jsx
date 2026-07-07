@@ -12,17 +12,11 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem("user");
-
-    return storedUser
-      ? JSON.parse(storedUser)
-      : null;
+    return storedUser ? JSON.parse(storedUser) : null;
   });
 
-  const [hasChannel, setHasChannel] =
-    useState(false);
-
-  const [loading, setLoading] =
-    useState(true);
+  const [hasChannel, setHasChannel] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const checkChannel = async (token) => {
     if (!token) {
@@ -32,7 +26,6 @@ export const AuthProvider = ({ children }) => {
 
     try {
       await getMyChannel(token);
-
       setHasChannel(true);
     } catch (err) {
       setHasChannel(false);
@@ -40,11 +33,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (user?.token) {
-      checkChannel(user.token);
-    }
+    const initialize = async () => {
+      if (user?.token) {
+        await checkChannel(user.token);
+      }
 
-    setLoading(false);
+      setLoading(false);
+    };
+
+    initialize();
   }, [user]);
 
   const login = (userData) => {
@@ -54,15 +51,11 @@ export const AuthProvider = ({ children }) => {
     );
 
     setUser(userData);
-
-    checkChannel(userData.token);
   };
 
   const logout = () => {
     localStorage.removeItem("user");
-
     setUser(null);
-
     setHasChannel(false);
   };
 
@@ -83,5 +76,4 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () =>
-  useContext(AuthContext);
+export const useAuth = () => useContext(AuthContext);
