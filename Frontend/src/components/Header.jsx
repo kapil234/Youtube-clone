@@ -12,19 +12,21 @@ import { useNavigate } from "react-router-dom";
 import { useVideo } from "../context/VideoContext";
 import { useAuth } from "../context/AuthContext";
 
-import { getMyChannel } from "../services/channelApi";
-
 const Header = ({ toggleSidebar }) => {
-  const { user, logout } = useAuth();
+  const {
+    user,
+    logout,
+    hasChannel,
+  } = useAuth();
+
   const { search, setSearch } = useVideo();
+
   const navigate = useNavigate();
 
   const [showMenu, setShowMenu] = useState(false);
-  const [hasChannel, setHasChannel] = useState(false);
 
   const menuRef = useRef(null);
 
-  // Close menu when clicking outside
   useEffect(() => {
     const closeMenu = (e) => {
       if (
@@ -35,36 +37,23 @@ const Header = ({ toggleSidebar }) => {
       }
     };
 
-    document.addEventListener("mousedown", closeMenu);
+    document.addEventListener(
+      "mousedown",
+      closeMenu
+    );
 
-    return () => {
+    return () =>
       document.removeEventListener(
         "mousedown",
         closeMenu
       );
-    };
   }, []);
-
-  // Check whether the user has a channel
-  useEffect(() => {
-    const checkChannel = async () => {
-      if (!user) return;
-
-      try {
-        await getMyChannel(user.token);
-        setHasChannel(true);
-      } catch (err) {
-        setHasChannel(false);
-      }
-    };
-
-    checkChannel();
-  }, [user]);
 
   return (
     <header className="fixed top-0 left-0 right-0 h-16 bg-white flex items-center justify-between px-6 shadow-md z-50">
 
       {/* Left */}
+
       <div className="flex items-center gap-4">
 
         <button onClick={toggleSidebar}>
@@ -73,13 +62,17 @@ const Header = ({ toggleSidebar }) => {
 
         <div
           onClick={() => navigate("/")}
-          className="flex items-center gap-2 text-red-600 cursor-pointer"
+          className="flex items-center gap-2 cursor-pointer"
         >
-          <FaYoutube size={32} />
+          <FaYoutube
+            size={32}
+            className="text-red-600"
+          />
 
-          <h1 className="text-xl font-bold text-black">
+          <h1 className="text-xl font-bold">
             YouTube Clone
           </h1>
+
         </div>
 
       </div>
@@ -90,15 +83,15 @@ const Header = ({ toggleSidebar }) => {
 
         <input
           type="text"
-          placeholder="Search"
           value={search}
+          placeholder="Search"
           onChange={(e) =>
             setSearch(e.target.value)
           }
-          className="flex-1 h-10 px-4 border border-gray-300 rounded-l-full outline-none"
+          className="flex-1 h-10 px-4 border rounded-l-full outline-none"
         />
 
-        <button className="h-10 px-6 border border-l-0 border-gray-300 rounded-r-full bg-gray-100 hover:bg-gray-200">
+        <button className="h-10 px-6 border border-l-0 rounded-r-full bg-gray-100 hover:bg-gray-200">
           <FaSearch />
         </button>
 
@@ -115,7 +108,7 @@ const Header = ({ toggleSidebar }) => {
 
           <img
             src={`https://ui-avatars.com/api/?name=${user.username}&background=ff0000&color=fff`}
-            alt="profile"
+            alt=""
             onClick={() =>
               setShowMenu(!showMenu)
             }
@@ -124,9 +117,7 @@ const Header = ({ toggleSidebar }) => {
 
           {showMenu && (
 
-            <div className="absolute right-0 top-14 w-72 bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
-
-              {/* Profile */}
+            <div className="absolute right-0 top-14 w-72 bg-white rounded-2xl shadow-xl border overflow-hidden">
 
               <div className="flex items-center gap-4 p-4">
 
@@ -155,8 +146,6 @@ const Header = ({ toggleSidebar }) => {
 
               <hr />
 
-              {/* Channel Button */}
-
               {hasChannel ? (
 
                 <button
@@ -164,9 +153,9 @@ const Header = ({ toggleSidebar }) => {
                     setShowMenu(false);
                     navigate("/my-channel");
                   }}
-                  className="w-full flex items-center gap-4 px-5 py-3 hover:bg-gray-100 transition"
+                  className="w-full flex items-center gap-4 px-5 py-3 hover:bg-gray-100"
                 >
-                  <FaUserCircle className="text-lg" />
+                  <FaUserCircle />
 
                   <span>Your Channel</span>
 
@@ -179,9 +168,9 @@ const Header = ({ toggleSidebar }) => {
                     setShowMenu(false);
                     navigate("/create-channel");
                   }}
-                  className="w-full flex items-center gap-4 px-5 py-3 hover:bg-gray-100 transition"
+                  className="w-full flex items-center gap-4 px-5 py-3 hover:bg-gray-100"
                 >
-                  <FaUpload className="text-lg" />
+                  <FaUpload />
 
                   <span>Create Channel</span>
 
@@ -191,16 +180,15 @@ const Header = ({ toggleSidebar }) => {
 
               <hr />
 
-              {/* Logout */}
-
               <button
                 onClick={() => {
                   logout();
+
                   navigate("/login");
                 }}
-                className="w-full flex items-center gap-4 px-5 py-3 hover:bg-gray-100 text-red-600 transition"
+                className="w-full flex items-center gap-4 px-5 py-3 text-red-600 hover:bg-red-50"
               >
-                <FaSignOutAlt className="text-lg" />
+                <FaSignOutAlt />
 
                 <span>Sign Out</span>
 
@@ -215,7 +203,9 @@ const Header = ({ toggleSidebar }) => {
       ) : (
 
         <button
-          onClick={() => navigate("/login")}
+          onClick={() =>
+            navigate("/login")
+          }
           className="border border-blue-600 text-blue-600 px-5 py-2 rounded-full hover:bg-blue-50"
         >
           Sign In
