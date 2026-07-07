@@ -8,7 +8,7 @@ import { createChannel } from "../services/channelApi";
 
 const CreateChannel = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, setHasChannel } = useAuth();
 
   const [form, setForm] = useState({
     channelName: "",
@@ -25,20 +25,23 @@ const CreateChannel = () => {
   };
 
   const submit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      await createChannel(form, user.token);
+  try {
+    await createChannel(form, user.token);
 
-      toast.success("Channel Created Successfully");
+    setHasChannel(true);
 
-      navigate("/my-channel");
-    } catch (err) {
-      toast.error(
-        err.response?.data?.message || "Failed to create channel"
-      );
-    }
-  };
+    toast.success("Channel Created Successfully");
+
+    navigate("/my-channel");
+  } catch (err) {
+    toast.error(
+      err.response?.data?.message ||
+        "Failed to create channel"
+    );
+  }
+};
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4 py-24">
