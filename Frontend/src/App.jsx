@@ -21,74 +21,62 @@ function App() {
 
   return (
     <>
-      <Header
-        toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+     <Header toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
+
+  <Sidebar open={sidebarOpen} />
+
+  <main
+    className={`pt-16 transition-all duration-300 ${
+      sidebarOpen ? "md:ml-60" : "md:ml-20"
+    }`}
+  >
+    <Routes>
+      <Route
+        path="/"
+        element={<Home sidebarOpen={sidebarOpen} />}
       />
 
-      <Sidebar open={sidebarOpen} />
+      <Route path="/login" element={<Login />} />
 
-      <Routes>
-        {/* Home */}
-        <Route
-          path="/"
-          element={<Home sidebarOpen={sidebarOpen} />}
-        />
+      <Route path="/register" element={<Register />} />
 
-        {/* Login */}
-        <Route
-          path="/login"
-          element={<Login />}
-        />
+      <Route
+        path="/upload"
+        element={
+          <ProtectedRoute>
+            <UploadVideo />
+          </ProtectedRoute>
+        }
+      />
 
-        {/* Register */}
-        <Route
-          path="/register"
-          element={<Register />}
-        />
+      <Route path="/video/:id" element={<VideoPlayer />} />
 
-        {/* Protected Upload Page */}
-        <Route
-          path="/upload"
-          element={
-            <ProtectedRoute>
-              <UploadVideo />
-            </ProtectedRoute>
-          }
-          
-        />
-        <Route
-path="/video/:id"
-element={<VideoPlayer/>}
-/>
-<Route path="/edit-video/:id" element={<EditVideo  />} />
-<Route
-  path="/create-channel"
-  element={
-    <ProtectedRoute>
-      <CreateChannel />
-    </ProtectedRoute>
-  }
-/>
-<Route
-  path="/edit-channel"
-  element={<EditChannel />}
-/>
+      <Route path="/edit-video/:id" element={<EditVideo />} />
 
-<Route
-  path="/my-channel"
-  element={
-    <ProtectedRoute>
-      <MyChannel />
-    </ProtectedRoute>
-  }
-/>
+      <Route
+        path="/create-channel"
+        element={
+          <ProtectedRoute>
+            <CreateChannel />
+          </ProtectedRoute>
+        }
+      />
 
-<Route
-  path="/channel/:id"
-  element={<Channel />}
-/>
-      </Routes>
-    </>
+      <Route path="/edit-channel" element={<EditChannel />} />
+
+      <Route
+        path="/my-channel"
+        element={
+          <ProtectedRoute>
+            <MyChannel />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route path="/channel/:id" element={<Channel />} />
+    </Routes>
+  </main>
+</>
   );
 }
 

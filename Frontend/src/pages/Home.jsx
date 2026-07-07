@@ -2,14 +2,11 @@ import FilterButtons from "../components/FilterButton";
 import VideoCard from "../components/VideoCard";
 import { useVideo } from "../context/VideoContext";
 
-const Home = ({ sidebarOpen }) => {
+const Home = () => {
   const { filteredVideos } = useVideo();
 
   return (
-    <main
-      className={`pt-20 transition-all duration-300 ${
-        sidebarOpen ? "ml-60" : "ml-20"
-      }`}
+    <
     >
       <div className="px-6">
         <FilterButtons />
@@ -32,7 +29,7 @@ const Home = ({ sidebarOpen }) => {
           </div>
         )}
       </div>
-    </main>
+    </>
   );
 };
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getChannel } from "../services/channelApi";
 import VideoCard from "../components/VideoCard";
@@ -21,30 +21,6 @@ const Channel = () => {
   const [data, setData] = useState(null);
   const [activeTab, setActiveTab] = useState("Videos");
   const [activeFilter, setActiveFilter] = useState("Latest");
-  const [showMenu, setShowMenu] = useState(false);
-
-const menuRef = useRef(null);
-useEffect(() => {
-  const handleClickOutside = (e) => {
-    if (
-      menuRef.current &&
-      !menuRef.current.contains(e.target)
-    ) {
-      setShowMenu(false);
-    }
-  };
-
-  document.addEventListener(
-    "mousedown",
-    handleClickOutside
-  );
-
-  return () =>
-    document.removeEventListener(
-      "mousedown",
-      handleClickOutside
-    );
-}, []);
 
   useEffect(() => {
     loadChannel();
@@ -88,7 +64,7 @@ useEffect(() => {
   }
 
   return (
-    <div className="pt-16 bg-white min-h-screen">
+    <div className="pt-6">
       {/* Banner */}
 
       <div className="max-w-7xl mx-auto px-6 mt-4">
@@ -129,50 +105,9 @@ useEffect(() => {
               {channel.description}
             </p>
 
-            <div className="mt-5 flex items-center gap-3">
-
-  <button className="bg-black text-white px-6 py-3 rounded-full hover:bg-zinc-800">
-    Subscribe
-  </button>
-
-  <div className="relative">
-
-    <button
-      onClick={() => setShowMenu(!showMenu)}
-      className="w-11 h-11 rounded-full hover:bg-gray-200 flex items-center justify-center"
-    >
-      <FaEllipsisV />
-    </button>
-
-    {showMenu && (
-      <div className="absolute top-12 right-0 w-52 bg-white rounded-xl shadow-xl border z-50 overflow-hidden">
-
-        <button
-          onClick={() => {
-            setShowMenu(false);
-            // navigate(`/edit-channel/${channel._id}`)
-          }}
-          className="w-full text-left px-5 py-3 hover:bg-gray-100"
-        >
-          ✏️ Edit Channel
-        </button>
-
-        <button
-          onClick={() => {
-            setShowMenu(false);
-            // deleteChannel()
-          }}
-          className="w-full text-left px-5 py-3 text-red-600 hover:bg-red-50"
-        >
-          🗑 Delete Channel
-        </button>
-
-      </div>
-    )}
-
-  </div>
-
-</div>
+            <button className="mt-5 bg-black text-white px-6 py-3 rounded-full hover:bg-zinc-800">
+              Subscribe
+            </button>
           </div>
         </div>
 

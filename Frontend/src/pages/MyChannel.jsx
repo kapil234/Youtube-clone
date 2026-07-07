@@ -138,7 +138,7 @@ const MyChannel = () => {
   }
 
   return (
-    <div className="pt-16 bg-white min-h-screen">
+    <div className="pt-6">
 
       {/* Banner */}
       <div className="max-w-7xl mx-auto px-6 mt-4">
