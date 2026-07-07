@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import ReactPlayer from "react-player";
 import {
   FaThumbsUp,
   FaThumbsDown,
@@ -33,7 +34,6 @@ const VideoPlayer = () => {
   const [comment, setComment] = useState("");
 
   const [editingId, setEditingId] = useState(null);
-
   const [editText, setEditText] = useState("");
 
   useEffect(() => {
@@ -59,7 +59,6 @@ const VideoPlayer = () => {
   const loadComments = async () => {
     try {
       const res = await getComments(id);
-
       setComments(res.data);
     } catch (err) {
       console.log(err);
@@ -87,9 +86,7 @@ const VideoPlayer = () => {
       );
 
       toast.success("Comment Added");
-
       setComment("");
-
       loadComments();
     } catch (err) {
       toast.error(
@@ -110,11 +107,8 @@ const VideoPlayer = () => {
       );
 
       toast.success("Comment Updated");
-
       setEditingId(null);
-
       setEditText("");
-
       loadComments();
     } catch (err) {
       toast.error(
@@ -125,18 +119,10 @@ const VideoPlayer = () => {
   };
 
   const removeComment = async (commentId) => {
-    if (
-      !window.confirm(
-        "Delete this comment?"
-      )
-    )
-      return;
+    if (!window.confirm("Delete this comment?")) return;
 
     try {
-      await deleteComment(
-        commentId,
-        user.token
-      );
+      await deleteComment(commentId, user.token);
 
       toast.success("Comment Deleted");
 
@@ -151,7 +137,7 @@ const VideoPlayer = () => {
 
   if (loading) {
     return (
-      <div className="pt-24 text-center text-2xl">
+      <div className="pt-24 text-center text-xl font-semibold">
         Loading...
       </div>
     );
@@ -159,57 +145,63 @@ const VideoPlayer = () => {
 
   if (!video) {
     return (
-      <div className="pt-24 text-center text-red-500 text-2xl">
+      <div className="pt-24 text-center text-red-500 text-xl">
         Video Not Found
       </div>
     );
   }
-    return (
-    <div className="min-h-screen bg-[#0f0f0f] text-white pt-20">
-      <div className="max-w-7xl mx-auto px-5">
+
+  return (
+    <div className="min-h-screen bg-gray-50 pt-20 md:ml-64">
+      <div className="max-w-6xl mx-auto px-6 py-5">
 
         {/* Video */}
 
-        <video
-          controls
-          src={video.videoUrl}
-          className="w-full rounded-xl bg-black"
-        />
+        <div className="w-full aspect-video rounded-xl overflow-hidden bg-black">
+  <ReactPlayer
+    src={video.videoUrl}
+    controls
+    width="100%"
+    height="100%"
+  />
+</div>
 
         {/* Title */}
 
-        <h1 className="text-3xl font-bold mt-6">
+        <h1 className="text-2xl font-bold text-gray-900 mt-5">
           {video.title}
         </h1>
 
         {/* Views */}
 
-        <p className="text-gray-400 mt-2">
+        <p className="text-gray-500 text-sm mt-2">
           {video.views} Views
         </p>
 
-        {/* Channel */}
+        {/* Channel + Actions */}
 
-        <div className="flex justify-between items-center flex-wrap gap-5 mt-8">
+        <div className="flex flex-col lg:flex-row justify-between lg:items-center gap-6 mt-6">
+
+          {/* Channel */}
 
           <div className="flex items-center gap-4">
 
             <img
-              src={
-                video.owner?.avatar ||
-                "https://i.pravatar.cc/100"
-              }
-              alt="avatar"
-              className="w-14 h-14 rounded-full object-cover"
-            />
+  src={
+    video.channel?.logo ||
+    "https://i.pravatar.cc/100"
+  }
+  alt={video.channel?.channelName}
+  className="w-10 h-10 rounded-full object-cover"
+/>
 
             <div>
 
-              <h2 className="font-semibold text-lg">
-                {video.owner?.username}
+              <h2 className="font-semibold text-lg text-gray-900">
+               {video.channel?.channelName}
               </h2>
 
-              <p className="text-gray-400">
+              <p className="text-gray-500 text-sm">
                 Video Creator
               </p>
 
@@ -217,41 +209,37 @@ const VideoPlayer = () => {
 
           </div>
 
-          {/* Action Buttons */}
+          {/* Buttons */}
 
           <div className="flex flex-wrap gap-3">
 
             <button
               onClick={() => setLikes(likes + 1)}
-              className="flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 px-5 py-3 rounded-full"
+              className="flex items-center gap-2 bg-gray-200 hover:bg-gray-300 transition px-5 py-3 rounded-full"
             >
               <FaThumbsUp />
-
               {likes}
             </button>
 
             <button
               onClick={() => setDislikes(dislikes + 1)}
-              className="flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 px-5 py-3 rounded-full"
+              className="flex items-center gap-2 bg-gray-200 hover:bg-gray-300 transition px-5 py-3 rounded-full"
             >
               <FaThumbsDown />
-
               {dislikes}
             </button>
 
             <button
-              className="flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 px-5 py-3 rounded-full"
+              className="flex items-center gap-2 bg-gray-200 hover:bg-gray-300 transition px-5 py-3 rounded-full"
             >
               <FaShare />
-
               Share
             </button>
 
             <button
-              className="flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 px-5 py-3 rounded-full"
+              className="flex items-center gap-2 bg-gray-200 hover:bg-gray-300 transition px-5 py-3 rounded-full"
             >
               <FaBookmark />
-
               Save
             </button>
 
@@ -261,55 +249,54 @@ const VideoPlayer = () => {
 
         {/* Description */}
 
-        <div className="bg-zinc-900 rounded-xl p-6 mt-8">
+        <div className="bg-white rounded-xl border shadow-sm p-6 mt-8">
 
-          <h2 className="text-xl font-semibold mb-3">
+          <h2 className="text-lg font-semibold text-gray-900 mb-3">
             Description
           </h2>
 
-          <p className="text-gray-300 leading-7">
+          <p className="text-gray-700 leading-7">
             {video.description}
           </p>
 
         </div>
-
-        {/* Comments */}
+                {/* Comments */}
 
         <div className="mt-10">
 
-          <h2 className="text-2xl font-bold mb-5">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">
             {comments.length} Comments
           </h2>
 
           {/* Add Comment */}
 
           {user ? (
+            <div className="bg-white border rounded-xl p-5 shadow-sm">
 
-            <>
               <textarea
                 rows={4}
                 value={comment}
-                onChange={(e) =>
-                  setComment(e.target.value)
-                }
-                placeholder="Write a comment..."
-                className="w-full bg-zinc-900 rounded-xl p-4 outline-none resize-none"
+                onChange={(e) => setComment(e.target.value)}
+                placeholder="Add a public comment..."
+                className="w-full border rounded-lg p-4 outline-none resize-none focus:ring-2 focus:ring-red-500"
               />
 
-              <button
-                onClick={submitComment}
-                className="bg-red-600 hover:bg-red-700 px-6 py-3 rounded-lg mt-4"
-              >
-                Add Comment
-              </button>
-            </>
+              <div className="flex justify-end mt-4">
 
+                <button
+                  onClick={submitComment}
+                  className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full transition"
+                >
+                  Comment
+                </button>
+
+              </div>
+
+            </div>
           ) : (
-
-            <p className="text-gray-400">
+            <div className="bg-white border rounded-xl p-5 text-gray-600">
               Login to add a comment.
-            </p>
-
+            </div>
           )}
 
           {/* Comments List */}
@@ -317,16 +304,16 @@ const VideoPlayer = () => {
           <div className="space-y-5 mt-8">
 
             {comments.length === 0 && (
-              <p className="text-gray-500">
+              <div className="bg-white border rounded-xl p-6 text-center text-gray-500">
                 No comments yet.
-              </p>
+              </div>
             )}
 
             {comments.map((item) => (
 
               <div
                 key={item._id}
-                className="bg-zinc-900 rounded-xl p-5"
+                className="bg-white border rounded-xl p-5 shadow-sm"
               >
 
                 <div className="flex gap-4">
@@ -337,12 +324,12 @@ const VideoPlayer = () => {
                       "https://i.pravatar.cc/100"
                     }
                     alt=""
-                    className="w-12 h-12 rounded-full"
+                    className="w-12 h-12 rounded-full object-cover"
                   />
 
                   <div className="flex-1">
 
-                    <h3 className="font-semibold">
+                    <h3 className="font-semibold text-gray-900">
                       {item.owner?.username}
                     </h3>
 
@@ -352,77 +339,64 @@ const VideoPlayer = () => {
                         <textarea
                           value={editText}
                           onChange={(e) =>
-                            setEditText(
-                              e.target.value
-                            )
+                            setEditText(e.target.value)
                           }
-                          className="w-full bg-zinc-800 rounded p-3 mt-3"
+                          rows={3}
+                          className="w-full border rounded-lg p-3 mt-3 outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                         />
 
-                        <div className="flex gap-3 mt-3">
+                        <div className="flex gap-3 mt-4">
 
                           <button
-                            onClick={() =>
-                              saveComment(
-                                item._id
-                              )
-                            }
-                            className="bg-green-600 px-4 py-2 rounded"
+                            onClick={() => saveComment(item._id)}
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg"
                           >
                             Save
                           </button>
 
                           <button
                             onClick={() => {
-                              setEditingId(
-                                null
-                              );
+                              setEditingId(null);
                               setEditText("");
                             }}
-                            className="bg-gray-600 px-4 py-2 rounded"
+                            className="bg-gray-300 hover:bg-gray-400 px-5 py-2 rounded-lg"
                           >
                             Cancel
                           </button>
 
                         </div>
+
                       </>
 
                     ) : (
 
                       <>
-                        <p className="text-gray-300 mt-2">
+
+                        <p className="text-gray-700 mt-2 leading-7">
                           {item.text}
                         </p>
 
                         {user &&
                           item.owner &&
-                          item.owner._id ===
-                            user._id && (
+                          item.owner._id === user._id && (
 
                             <div className="flex gap-5 mt-4">
 
                               <button
                                 onClick={() => {
-                                  setEditingId(
-                                    item._id
-                                  );
-
-                                  setEditText(
-                                    item.text
-                                  );
+                                  setEditingId(item._id);
+                                  setEditText(item.text);
                                 }}
-                                className="text-blue-400 hover:text-blue-300"
+                                className="text-blue-600 hover:underline"
                               >
                                 Edit
                               </button>
 
                               <button
                                 onClick={() =>
-                                  removeComment(
-                                    item._id
-                                  )
+                                  removeComment(item._id)
                                 }
-                                className="text-red-500 hover:text-red-400"
+                                className="text-red-600 hover:underline"
                               >
                                 Delete
                               </button>

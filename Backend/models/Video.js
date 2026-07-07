@@ -23,10 +23,21 @@ const videoSchema = new mongoose.Schema(
       required: true,
     },
 
+    duration: {
+      type: String,
+      default: "0:00",
+    },
+
     category: {
       type: String,
-      required: true,
+      default: "All",
     },
+
+    tags: [
+      {
+        type: String,
+      },
+    ],
 
     views: {
       type: Number,
@@ -47,6 +58,17 @@ const videoSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+    },
+
+    channel: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Channel",
+      required: true,
+    },
+
+    isPublished: {
+      type: Boolean,
+      default: true,
     },
   },
   {

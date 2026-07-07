@@ -1,13 +1,34 @@
 import Video from "../models/Video.js";
+import Channel from "../models/Channel.js";
 
+// =======================
+// Create Video
+// =======================
 export const createVideo = async (req, res) => {
   try {
+    // Find logged-in user's channel
+    const channel = await Channel.findOne({
+      owner: req.user._id,
+     
+    });
+
+    if (!channel) {
+      return res.status(404).json({
+        message: "Please create a channel first.",
+      });
+    }
+
     const video = await Video.create({
       ...req.body,
       owner: req.user._id,
+      channel: channel._id,
     });
 
-    res.status(201).json(video);
+    const populatedVideo = await Video.findById(video._id)
+      .populate("owner", "username profile")
+      .populate("channel", "channelName logo subscribers");
+
+    res.status(201).json(populatedVideo);
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -15,14 +36,17 @@ export const createVideo = async (req, res) => {
   }
 };
 
-
+// =======================
+// Get All Videos
+// =======================
 export const getVideos = async (req, res) => {
   try {
     const videos = await Video.find()
-      .populate("owner", "username avatar")
+      .populate("owner", "username profile")
+      .populate("channel", "channelName logo subscribers")
       .sort({ createdAt: -1 });
 
-    res.json(videos);
+    res.status(200).json(videos);
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -30,12 +54,14 @@ export const getVideos = async (req, res) => {
   }
 };
 
+// =======================
+// Get Single Video
+// =======================
 export const getVideo = async (req, res) => {
   try {
-    const video = await Video.findById(req.params.id).populate(
-      "owner",
-      "username avatar"
-    );
+    const video = await Video.findById(req.params.id)
+      .populate("owner", "username profile")
+      .populate("channel", "channelName logo subscribers");
 
     if (!video) {
       return res.status(404).json({
@@ -43,7 +69,7 @@ export const getVideo = async (req, res) => {
       });
     }
 
-    res.json(video);
+    res.status(200).json(video);
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -51,6 +77,9 @@ export const getVideo = async (req, res) => {
   }
 };
 
+// =======================
+// Update Video
+// =======================
 export const updateVideo = async (req, res) => {
   try {
     const video = await Video.findById(req.params.id);
@@ -71,7 +100,11 @@ export const updateVideo = async (req, res) => {
 
     await video.save();
 
-    res.json(video);
+    const updatedVideo = await Video.findById(video._id)
+      .populate("owner", "username profile")
+      .populate("channel", "channelName logo subscribers");
+
+    res.status(200).json(updatedVideo);
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -79,6 +112,9 @@ export const updateVideo = async (req, res) => {
   }
 };
 
+// =======================
+// Delete Video
+// =======================
 export const deleteVideo = async (req, res) => {
   try {
     const video = await Video.findById(req.params.id);
@@ -97,7 +133,7 @@ export const deleteVideo = async (req, res) => {
 
     await video.deleteOne();
 
-    res.json({
+    res.status(200).json({
       message: "Video deleted successfully",
     });
   } catch (error) {

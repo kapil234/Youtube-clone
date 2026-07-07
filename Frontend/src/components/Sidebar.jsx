@@ -5,16 +5,39 @@ import {
   FaGamepad,
   FaHistory,
 } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const menuItems = [
-  { icon: <FaHome />, label: "Home" },
-  { icon: <FaFire />, label: "Trending" },
-  { icon: <FaMusic />, label: "Music" },
-  { icon: <FaGamepad />, label: "Gaming" },
-  { icon: <FaHistory />, label: "History" },
+  {
+    icon: <FaHome />,
+    label: "Home",
+    path: "/",
+  },
+  {
+    icon: <FaFire />,
+    label: "Trending",
+    path: "/trending",
+  },
+  {
+    icon: <FaMusic />,
+    label: "Music",
+    path: "/music",
+  },
+  {
+    icon: <FaGamepad />,
+    label: "Gaming",
+    path: "/gaming",
+  },
+  {
+    icon: <FaHistory />,
+    label: "History",
+    path: "/history",
+  },
 ];
 
 const Sidebar = ({ open }) => {
+  const navigate = useNavigate();
+
   return (
     <aside
       className={`fixed top-16 left-0 h-screen bg-white border-r border-gray-200 transition-all duration-300 z-40
@@ -27,6 +50,7 @@ const Sidebar = ({ open }) => {
         {menuItems.map((item) => (
           <button
             key={item.label}
+            onClick={() => navigate(item.path)}
             className={`flex items-center ${
               open ? "justify-start px-4" : "justify-center"
             } h-12 rounded-xl text-gray-700 hover:bg-gray-100 transition`}

@@ -1,6 +1,9 @@
 import Channel from "../models/Channel.js";
 import Video from "../models/Video.js";
-//Create Channel
+
+// =======================
+// Create Channel
+// =======================
 export const createChannel = async (req, res) => {
   try {
     const exists = await Channel.findOne({
@@ -25,26 +28,15 @@ export const createChannel = async (req, res) => {
     });
   }
 };
-//Get My Channel
+
+// =======================
+// Get My Channel
+// =======================
 export const getMyChannel = async (req, res) => {
   try {
     const channel = await Channel.findOne({
       owner: req.user._id,
-    });
-
-    res.json(channel);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
-//Get Channel By ID
-export const getChannel = async (req, res) => {
-  try {
-    const channel = await Channel.findById(
-      req.params.id
-    ).populate("owner", "username email");
+    }).populate("owner", "username email profile");
 
     if (!channel) {
       return res.status(404).json({
@@ -53,10 +45,12 @@ export const getChannel = async (req, res) => {
     }
 
     const videos = await Video.find({
-      owner: channel.owner._id,
-    });
+      channel: channel._id,
+    })
+      .populate("owner", "username profile")
+      .populate("channel", "channelName logo");
 
-    res.json({
+    res.status(200).json({
       channel,
       videos,
     });
@@ -66,7 +60,44 @@ export const getChannel = async (req, res) => {
     });
   }
 };
-//Update Channel
+
+// =======================
+// Get Channel By Id
+// =======================
+export const getChannel = async (req, res) => {
+  try {
+    const channel = await Channel.findById(req.params.id)
+      .populate("owner", "username email profile");
+
+    if (!channel) {
+      return res.status(404).json({
+        message: "Channel not found",
+      });
+    }
+
+    const videos = await Video.find({
+      channel: channel._id,
+    })
+      .populate("owner", "username profile")
+      .populate("channel", "channelName logo subscribers")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      channel,
+      videos,
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+// =======================
+// Update Channel
+// =======================
 export const updateChannel = async (req, res) => {
   try {
     const channel = await Channel.findOne({
@@ -83,14 +114,17 @@ export const updateChannel = async (req, res) => {
 
     await channel.save();
 
-    res.json(channel);
+    res.status(200).json(channel);
   } catch (error) {
     res.status(500).json({
       message: error.message,
     });
   }
 };
-//Delete Channel
+
+// =======================
+// Delete Channel
+// =======================
 export const deleteChannel = async (req, res) => {
   try {
     const channel = await Channel.findOne({
@@ -103,10 +137,14 @@ export const deleteChannel = async (req, res) => {
       });
     }
 
+    await Video.deleteMany({
+      channel: channel._id,
+    });
+
     await channel.deleteOne();
 
-    res.json({
-      message: "Channel Deleted Successfully",
+    res.status(200).json({
+      message: "Channel deleted successfully",
     });
   } catch (error) {
     res.status(500).json({

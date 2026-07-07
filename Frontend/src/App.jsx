@@ -13,6 +13,8 @@ import VideoPlayer from "./pages/VideoPlayer";
 import CreateChannel from "./pages/CreateChannel";
 import MyChannel from "./pages/MyChannel";
 import Channel from "./pages/Channel";
+import EditChannel from "./pages/EditChannel";
+import EditVideo from "./pages/EditVideo";
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -58,6 +60,7 @@ function App() {
 path="/video/:id"
 element={<VideoPlayer/>}
 />
+<Route path="/edit-video/:id" element={<EditVideo  />} />
 <Route
   path="/create-channel"
   element={
@@ -65,6 +68,10 @@ element={<VideoPlayer/>}
       <CreateChannel />
     </ProtectedRoute>
   }
+/>
+<Route
+  path="/edit-channel"
+  element={<EditChannel />}
 />
 
 <Route
