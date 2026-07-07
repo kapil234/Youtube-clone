@@ -12,6 +12,7 @@ import MyChannel from "../pages/MyChannel";
 import Channel from "../pages/Channel";
 import EditChannel from "../pages/EditChannel";
 import EditVideo from "../pages/EditVideo";
+import NotFound from "../pages/NotFound";
 
 const AppRoutes = () => {
   return (
@@ -68,6 +69,10 @@ const AppRoutes = () => {
         path="/channel/:id"
         element={<Channel />}
       />
+      <Route
+  path="*"
+  element={<NotFound/>}
+/>
     </Routes>
   );
 };

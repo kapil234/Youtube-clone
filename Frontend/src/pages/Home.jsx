@@ -24,7 +24,7 @@ const Home = () => {
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
             {filteredVideos.map((video) => (
-              <VideoCard key={video.id} video={video} />
+              <VideoCard key={video._id} video={video} />
             ))}
           </div>
         )}
