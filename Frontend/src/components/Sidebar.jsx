@@ -9,27 +9,27 @@ import { useNavigate } from "react-router-dom";
 
 const menuItems = [
   {
-    icon: <FaHome />,
+    icon: <FaHome size={20} />,
     label: "Home",
     path: "/",
   },
   {
-    icon: <FaFire />,
+    icon: <FaFire size={20} />,
     label: "Trending",
     path: "/trending",
   },
   {
-    icon: <FaMusic />,
+    icon: <FaMusic size={20} />,
     label: "Music",
     path: "/music",
   },
   {
-    icon: <FaGamepad />,
+    icon: <FaGamepad size={20} />,
     label: "Gaming",
     path: "/gaming",
   },
   {
-    icon: <FaHistory />,
+    icon: <FaHistory size={20} />,
     label: "History",
     path: "/history",
   },
